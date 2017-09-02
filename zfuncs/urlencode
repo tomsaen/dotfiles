@@ -1,0 +1,5 @@
+#!/usr/bin/env zsh
+
+function urlencode() {
+  echo "$1" | python -c 'import sys,urllib;print urllib.quote_plus(sys.stdin.read().strip())'
+}

@@ -1,0 +1,13 @@
+#!/usr/bin/env zsh
+
+function project {
+    mkvirtualenv ${1}
+    workon ${1}
+    pip install --upgrade pip
+    cd "$VIRTUAL_ENV"
+    git clone git@github.com:stylight/${1}.git src/${1}
+    cd src/${1}
+    pip install -r development.txt
+    echo 'cd "$VIRTUAL_ENV"/src/'"${1}" >> "$VIRTUAL_ENV"/bin/postactivate
+}
+

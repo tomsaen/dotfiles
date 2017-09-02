@@ -1,0 +1,39 @@
+#!/usr/bin/env zsh
+
+
+function db() {
+
+  local available_databases=($(ls $HOME/.dbs))
+
+  if [[ -z "$1" || "$1" == "-l" ]]; then
+    echo "Available databases are:"
+    for db_ in "${available_databases[@]}"; do
+      echo " - $db_"
+    done
+    return 0
+  fi
+
+  if [ ! -f $HOME/.dbs/$1 ]; then
+    echo "No available db $1, choose from:"
+    for db_ in "${available_databases[@]}"; do
+      echo " - $db_"
+    done
+    return 1
+  fi
+
+  local password=""
+
+  # shellcheck disable=
+  # Read the file
+  . $HOME/.dbs/$1
+
+  shift
+  if [[ "${type:?}" == "mysql" ]]; then
+    cmd="mycli"
+    $cmd  -h "${host:?}" -P "${port:?}" -u "${username:?}" --password "$password" "$@" "${database:?}"
+  elif [[ "${type:?}" == "postgres" ]]; then
+    cmd="pgcli"
+    encoded=$(urlencode $password)
+    $cmd postgres://${username}:${encoded}@${host}:${port}/${database}
+  fi
+}
