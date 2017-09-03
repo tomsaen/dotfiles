@@ -22,7 +22,7 @@ export LC_ALL=en_US.UTF-8
 ## Load functions
 fpath=(${fpath} ${ZSH_BASE}/zfuncs)
 for func in ${ZSH_BASE}/zfuncs/*; do
-    autoload -Uz "{$func}"
+    autoload -Uz $(basename ${func})
 done
 
 
