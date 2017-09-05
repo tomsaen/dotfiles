@@ -1,16 +1,22 @@
-## zgen
-source "${HOME}/.zgen/zgen.zsh"
+## zplug
+if [[ ! -d ~/.zplug ]];then
+    git clone https://github.com/b4b4r07/zplug ~/.zplug
+fi
 
-if ! zgen saved; then
-    zgen oh-my-zsh
+source "${HOME}/.zplug/init.zsh"
 
-    zgen oh-my-zsh plugins/git
-    zgen oh-my-zsh plugins/pip
-    zgen oh-my-zsh plugins/sudo
-    zgen load zsh-users/zsh-syntax-highlighting
+zplug "zsh-users/zsh-syntax-highlighting", from:github, defer:2
+zplug "plugins/git", from:oh-my-zsh
+zplug "plugins/pip", from:oh-my-zsh
+zplug "lib/completion", from:oh-my-zsh
+zplug denysdovhan/spaceship-zsh-theme, use:spaceship.zsh, from:github, as:theme
+zplug load
 
-    zgen load denysdovhan/spaceship-zsh-theme spaceship
-    zgen save
+if ! zplug check --verbose; then
+    printf "Install zplug plugins? [y/N]: "
+    if read -q; then
+        echo; zplug install
+    fi
 fi
 
 ZSH_BASE="${HOME}/.zsh"
