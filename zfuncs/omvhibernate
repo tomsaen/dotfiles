@@ -1,7 +1,7 @@
 #! /usr/bin/env zsh
 
 function omvhibernate() {
-	ssh -T root@10.10.1.10 <<HERE 
-	pm-hibernate
+	ssh -T root@10.10.1.10 <<HERE
+	pm-hibernate &
 HERE
 }
