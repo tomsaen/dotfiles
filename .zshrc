@@ -19,6 +19,10 @@ if ! zplug check --verbose; then
     fi
 fi
 
+# Spaceship theme relevant things
+SPACESHIP_BATTERY_SHOW=false
+SPACESHIP_DOCKER_SHOW=false
+
 ZSH_BASE="${HOME}/.zsh"
 
 export LANGUAGE=en_US.UTF-8
