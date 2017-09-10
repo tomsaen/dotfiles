@@ -2,7 +2,9 @@ import argparse as _argparse
 import os as _os
 import pathlib as _pathlib
 import sys as _sys
+import shutil as _shutil
 import functools as _ft
+import contextlib as _contextlib
 
 dpath = _ft.partial(_os.path.join, _os.path.dirname(_os.path.abspath(
     _os.path.normpath(__file__)
@@ -15,7 +17,6 @@ _MAPPINGS = [
     ('zfuncs', '.zsh/zfuncs'),
 ]
 
-# Just symlink them to the home directory using the same name.
 _FILES = set([
     '.tmux.conf',
     '.zshrc'
@@ -24,6 +25,27 @@ _FILES = set([
 _BLACKLISTED = set([
     'private'
 ])
+
+vprint = None
+
+
+def _assert_existence(func):
+    """ Decorator to assert src and target"""
+    def proxy(*args, **kwargs):
+        """ Decorated function """
+        src, target, *args = args
+        if _os.path.exists(src):
+            _makedir(_os.path.dirname(target))
+            return func(src, target, *args, **kwargs)
+        else:
+            vprint("{src} does not exist".format(src=src))
+    return proxy
+
+
+def _set_printer(verbose):
+    """ Set global vprint """
+    global vprint
+    vprint = print if verbose else lambda *args, **kwargs: None
 
 
 def _find_platform():
@@ -38,37 +60,88 @@ def _makedir(newdir):
     _pathlib.Path(newdir).mkdir(parents=True, exist_ok=True)
 
 
-def _create_symlink(src, target):
-    """ Actually create the symlink """
-    print("Symlinking {src} --> {target}".format(src=src, target=target))
+@_assert_existence
+def _copy(src, target, **kwargs):
+    """ Copy the file """
+    vprint("Copying {src} --> {target}".format(src=src, target=target))
 
-    _makedir(_os.path.dirname(target))
+    force = kwargs.pop('force', False)
+    dry = kwargs.pop('dry', False)
+
+    if _os.path.exists(target):
+        vprint("{target} already exists".format(target=target))
+        if force and not dry:
+            _os.remove(target)
+        else:
+            return
+
+    if not dry:
+        _shutil.copy(src, target)
+
+
+@_assert_existence
+def _link(src, target, **kwargs):
+    """ Actually create the symlink """
+    vprint("Symlinking {src} --> {target}".format(src=src, target=target))
+    dry = kwargs.pop('dry', False)
 
     try:
-        _os.symlink(src, target)
+        if not dry:
+            _os.symlink(src, target)
     except FileExistsError:
-        print("File {target} already exists.".format(target=target))
+        vprint("File {target} already exists.".format(target=target))
 
 
-def _symlink(dry=False, verbose=True):
-    """
-    Create symlinks 
-    """
-    print("Symlinking now ...")
+def _platform_specifics(func, platform, dry=False, force=False):
+    """ Handle platform specific stuff """
+    # Platform specific
+    source = "source-{platform}".format(platform=platform)
+    func(dpath('platform', source), hpath('.zsh', 'platform'), force=force, dry=dry)
+
+    tmux = "tmux-{platform}".format(platform=platform)
+    func(dpath('platform', tmux), hpath('.tmux-platform'), force=force, dry=dry)
+
+
+def _install(func, dry=False, force=False):
+    """ Install dotfiles """
+    vprint("Installing dotfiles now ...")
+
+    if dry:
+        vprint("========== DRY RUN ==========")
+
     for file_ in _FILES:
-        _create_symlink(dpath(file_), hpath(file_))
+        func(dpath(file_), hpath(file_), dry=dry, force=force)
 
     for src, target in _MAPPINGS:
         for file_ in _os.listdir(dpath(src)):
-            _create_symlink(dpath(src, file_), hpath(target, file_))
+            func(dpath(src, file_), hpath(target, file_), dry=dry, force=force)
 
     platform = _find_platform()
-    
+
     if platform is not None:
-        _create_symlink(dpath('platform', platform), hpath('.zsh', 'platform'))
+        _platform_specifics(func, platform, force=force)
+
 
 def main():
-    _symlink(dry=True)
+    """ Main function """
+    parser = _argparse.ArgumentParser(
+        description="tomsaens dotfiles installer"
+    )
+    parser.add_argument('--force', action='store_true', default=False)
+    parser.add_argument('--link', action='store_true', default=False,
+                        help="If set, the dotfiles will only symlinked to their target. "
+                             "Default is False (copy them)")
+    parser.add_argument('--silent', action='store_true', default=False)
+    parser.add_argument('--dry', action='store_true', default=False)
+
+    args = parser.parse_args()
+
+    func = _link if args.link else _copy
+
+    verbose = not args.silent
+    _set_printer(verbose)
+
+    _install(func, dry=args.dry, force=args.force)
 
 
 if __name__ == '__main__':
