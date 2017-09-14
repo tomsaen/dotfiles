@@ -1,3 +1,8 @@
+## zsh
+export HISTSIZE=100000
+export SAVEHIST=100000
+export HISTFILE="${HOME}/.zsh_history"
+
 ## zplug
 if [[ ! -d ~/.zplug ]];then
     git clone https://github.com/b4b4r07/zplug ~/.zplug
