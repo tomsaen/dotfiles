@@ -62,7 +62,6 @@ export WORKON_HOME=~/.virtualenvs
 source <(gopass completion zsh)
 
 alias wakeup="wakeonlan -i 10.10.1.255 9c:b6:54:09:2e:2b"
-alias stylight-vpn="sudo openvpn --config ${HOME}/Documents/stylight.ovpn"
 
 alias zshsource="source ${HOME}/.zshrc"
 alias zshedit="vim ${HOME}/.zshrc"

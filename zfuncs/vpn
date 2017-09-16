@@ -1,0 +1,6 @@
+#! /usr/bin/env zsh
+
+function vpn() {
+    file="${1}.ovpn"
+    sudo openvpn --config ${HOME}/Documents/vpn/${file}
+}
