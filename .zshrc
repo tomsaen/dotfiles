@@ -40,16 +40,19 @@ for func in ${ZSH_BASE}/zfuncs/*; do
     autoload -Uz $(basename ${func})
 done
 
-
-## Load alias
+## Source aliases
 for alias in ${ZSH_BASE}/alias/*; do
     source "$alias"
 done
 
-
-## Platform specific things
-source "${ZSH_BASE}/platform"
-
+## Source optional file within ZSH_BASE
+optionals=("platform" "private")
+for file in $optionals; do
+    fullfile="${ZSH_BASE}/${file}"
+    if [ -f $fullfile ]; then
+      source $fullfile
+    fi
+done
 
 path+=("${HOME}/.cargo/bin")
 export PATH
