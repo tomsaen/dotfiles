@@ -4,7 +4,7 @@ import pathlib as _pathlib
 import sys as _sys
 import shutil as _shutil
 import functools as _ft
-import contextlib as _contextlib
+import hashlib as _hashlib
 
 dpath = _ft.partial(_os.path.join, _os.path.dirname(_os.path.abspath(
     _os.path.normpath(__file__)
@@ -29,6 +29,18 @@ _BLACKLISTED = set([
 vprint = None
 
 
+def _modified_only(func):
+    """ Decorator to only process files that have been changed """
+    def proxy(*args, **kwargs):
+        """ Decorated function """
+        src, target, *args = args
+        if _hashed(src) != _hashed(target):
+            return func(src, target, *args, **kwargs)
+        else:
+            vprint("{src} -> Hash did not change. Skipping.".format(src=src))
+    return proxy
+
+
 def _assert_existence(func):
     """ Decorator to assert src and target"""
     def proxy(*args, **kwargs):
@@ -40,6 +52,16 @@ def _assert_existence(func):
         else:
             vprint("{src} does not exist".format(src=src))
     return proxy
+
+
+def _hashed(file_):
+    """ Hash content of file_ and return the hexdigest """
+    hashed = _hashlib.sha256()
+    with open(file_, 'r') as fp:
+        buf = fp.read().encode('utf-8')  # Do not do this for very big files
+        hashed.update(buf)
+
+    return hashed.hexdigest()
 
 
 def _set_printer(verbose):
@@ -61,6 +83,7 @@ def _makedir(newdir):
 
 
 @_assert_existence
+@_modified_only
 def _copy(src, target, **kwargs):
     """ Copy the file """
     vprint("Copying {src} --> {target}".format(src=src, target=target))
@@ -77,7 +100,6 @@ def _copy(src, target, **kwargs):
 
     if not dry:
         _shutil.copy(src, target)
-
 
 @_assert_existence
 def _link(src, target, **kwargs):
