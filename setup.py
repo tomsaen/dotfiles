@@ -34,7 +34,9 @@ def _modified_only(func):
     def proxy(*args, **kwargs):
         """ Decorated function """
         src, target, *args = args
-        if _hashed(src) != _hashed(target):
+        force = kwargs.get('force', False)
+
+        if force or _hashed(src) != _hashed(target):
             return func(src, target, *args, **kwargs)
         else:
             vprint("{src} -> Hash did not change. Skipping.".format(src=src))
@@ -92,7 +94,6 @@ def _copy(src, target, **kwargs):
     dry = kwargs.pop('dry', False)
 
     if _os.path.exists(target):
-        vprint("{target} already exists".format(target=target))
         if force and not dry:
             _os.remove(target)
         else:
@@ -127,6 +128,9 @@ def _platform_specifics(func, platform, dry=False, force=False):
 def _install(func, dry=False, force=False):
     """ Install dotfiles """
     vprint("Installing dotfiles now ...")
+
+    if force:
+        vprint("!! Force is activated. Overriding existing files !!")
 
     if dry:
         vprint("========== DRY RUN ==========")
