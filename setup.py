@@ -79,6 +79,7 @@ def _find_platform():
     elif _sys.platform == 'darwin':
         return 'osx'
 
+
 def _makedir(newdir):
     """ Create newdir, if necessary """
     _pathlib.Path(newdir).mkdir(parents=True, exist_ok=True)
@@ -102,6 +103,7 @@ def _copy(src, target, **kwargs):
     if not dry:
         _shutil.copy(src, target)
 
+
 @_assert_existence
 def _link(src, target, **kwargs):
     """ Actually create the symlink """
@@ -119,7 +121,8 @@ def _platform_specifics(func, platform, dry=False, force=False):
     """ Handle platform specific stuff """
     # Platform specific
     source = "source-{platform}".format(platform=platform)
-    func(dpath('platform', source), hpath('.zsh', 'platform'), force=force, dry=dry)
+    func(dpath('platform', source), hpath('.zsh', 'platform'), force=force,
+         dry=dry)
 
     tmux = "tmux-{platform}".format(platform=platform)
     func(dpath('platform', tmux), hpath('.tmux-platform'), force=force, dry=dry)
