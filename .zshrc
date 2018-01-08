@@ -62,8 +62,6 @@ export GPG_TTY=$(tty)
 
 export WORKON_HOME=~/.virtualenvs
 
-source <(gopass completion zsh)
-
 alias wakeup="wakeonlan -i 10.10.1.255 9c:b6:54:09:2e:2b"
 
 alias zshsource="source ${HOME}/.zshrc"
