@@ -55,6 +55,7 @@ for file in $optionals; do
 done
 
 path+=("${HOME}/.cargo/bin")
+path+=("${HOME}/go")
 export PATH
 
 export EDITOR=vim
