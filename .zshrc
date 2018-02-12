@@ -5,7 +5,7 @@ export HISTFILE="${HOME}/.zsh_history"
 
 ## zplug
 if [[ ! -d ~/.zplug ]];then
-    git clone https://github.com/b4b4r07/zplug ~/.zplug
+    git clone https://github.com/zplug/zplug ~/.zplug
 fi
 
 source "${HOME}/.zplug/init.zsh"
@@ -34,6 +34,12 @@ export LANGUAGE=en_US.UTF-8
 export LANG=en_US.UTF-8
 export LC_ALL=en_US.UTF-8
 
+# Virtualenv
+export VIRTUALENVWRAPPER_PYTHON=/usr/bin/python2
+export VIRTUALENVWRAPPER_VIRTUALENV=/usr/bin/virtualenv
+export WORKON_HOME=~/.virtualenvs
+source /usr/bin/virtualenvwrapper_lazy.sh
+
 ## Load functions
 fpath=(${fpath} ${ZSH_BASE}/zfuncs)
 for func in ${ZSH_BASE}/zfuncs/*; do
@@ -48,9 +54,9 @@ done
 ## Source optional file within ZSH_BASE
 optionals=("platform" "private")
 for file in $optionals; do
-    fullfile="${ZSH_BASE}/${file}"
-    if [ -f $fullfile ]; then
-      source $fullfile
+    ffile="${ZSH_BASE}/${file}"
+    if [ -f $ffile ]; then
+      source $ffile
     fi
 done
 
@@ -60,10 +66,6 @@ export PATH
 
 export EDITOR=vim
 export GPG_TTY=$(tty)
-
-export WORKON_HOME=~/.virtualenvs
-
-alias wakeup="wakeonlan -i 10.10.1.255 9c:b6:54:09:2e:2b"
 
 alias zshsource="source ${HOME}/.zshrc"
 alias zshedit="vim ${HOME}/.zshrc"

@@ -17,14 +17,11 @@ _MAPPINGS = [
     ('zfuncs', '.zsh/zfuncs'),
 ]
 
-_FILES = set([
+_FILES = [
     '.tmux.conf',
     '.zshrc'
-])
+]
 
-_BLACKLISTED = set([
-    'private'
-])
 
 vprint = None
 
@@ -34,12 +31,12 @@ def _modified_only(func):
     def proxy(*args, **kwargs):
         """ Decorated function """
         src, target, *args = args
-        force = kwargs.get('force', False)
 
-        if force or _hashed(src) != _hashed(target):
+        if not _os.path.exists(target) or _hashed(src) != _hashed(target):
             return func(src, target, *args, **kwargs)
         else:
             vprint("{src} -> Hash did not change. Skipping.".format(src=src))
+
     return proxy
 
 
@@ -53,6 +50,7 @@ def _assert_existence(func):
             return func(src, target, *args, **kwargs)
         else:
             vprint("{src} does not exist".format(src=src))
+
     return proxy
 
 
@@ -71,15 +69,6 @@ def _set_printer(verbose):
     global vprint
     vprint = print if verbose else lambda *args, **kwargs: None
 
-
-def _find_platform():
-    """ Specify the platform we are on. OSX and Linux are supported """
-    if _sys.platform in ('linux', 'linux2'):
-        return 'linux'
-    elif _sys.platform == 'darwin':
-        return 'osx'
-
-
 def _makedir(newdir):
     """ Create newdir, if necessary """
     _pathlib.Path(newdir).mkdir(parents=True, exist_ok=True)
@@ -91,14 +80,10 @@ def _copy(src, target, **kwargs):
     """ Copy the file """
     vprint("Copying {src} --> {target}".format(src=src, target=target))
 
-    force = kwargs.pop('force', False)
     dry = kwargs.pop('dry', False)
 
-    if _os.path.exists(target):
-        if force and not dry:
-            _os.remove(target)
-        else:
-            return
+    if _os.path.exists(target) and not dry:
+        _os.remove(target)
 
     if not dry:
         _shutil.copy(src, target)
@@ -117,38 +102,19 @@ def _link(src, target, **kwargs):
         vprint("File {target} already exists.".format(target=target))
 
 
-def _platform_specifics(func, platform, dry=False, force=False):
-    """ Handle platform specific stuff """
-    # Platform specific
-    source = "source-{platform}".format(platform=platform)
-    func(dpath('platform', source), hpath('.zsh', 'platform'), force=force,
-         dry=dry)
-
-    tmux = "tmux-{platform}".format(platform=platform)
-    func(dpath('platform', tmux), hpath('.tmux-platform'), force=force, dry=dry)
-
-
-def _install(func, dry=False, force=False):
+def _install(func, dry=False):
     """ Install dotfiles """
     vprint("Installing dotfiles now ...")
-
-    if force:
-        vprint("!! Force is activated. Overriding existing files !!")
 
     if dry:
         vprint("========== DRY RUN ==========")
 
     for file_ in _FILES:
-        func(dpath(file_), hpath(file_), dry=dry, force=force)
+        func(dpath(file_), hpath(file_), dry=dry)
 
     for src, target in _MAPPINGS:
         for file_ in _os.listdir(dpath(src)):
-            func(dpath(src, file_), hpath(target, file_), dry=dry, force=force)
-
-    platform = _find_platform()
-
-    if platform is not None:
-        _platform_specifics(func, platform, force=force)
+            func(dpath(src, file_), hpath(target, file_), dry=dry)
 
 
 def main():
@@ -156,7 +122,6 @@ def main():
     parser = _argparse.ArgumentParser(
         description="tomsaens dotfiles installer"
     )
-    parser.add_argument('--force', action='store_true', default=False)
     parser.add_argument('--link', action='store_true', default=False,
                         help="If set, the dotfiles will only symlinked to their target. "
                              "Default is False (copy them)")
@@ -170,7 +135,7 @@ def main():
     verbose = not args.silent
     _set_printer(verbose)
 
-    _install(func, dry=args.dry, force=args.force)
+    _install(func, dry=args.dry)
 
 
 if __name__ == '__main__':
