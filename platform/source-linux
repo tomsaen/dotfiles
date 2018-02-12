@@ -1,3 +1,0 @@
-export VIRTUALENVWRAPPER_PYTHON=/usr/bin/python2
-export VIRTUALENVWRAPPER_VIRTUALENV=/usr/bin/virtualenv
-source /usr/bin/virtualenvwrapper_lazy.sh
