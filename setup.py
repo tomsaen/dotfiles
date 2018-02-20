@@ -19,7 +19,8 @@ _MAPPINGS = [
 
 _FILES = [
     '.tmux.conf',
-    '.zshrc'
+    '.zshrc',
+    '.vimrc',
 ]
 
 
