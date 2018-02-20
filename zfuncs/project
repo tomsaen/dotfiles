@@ -1,13 +1,21 @@
 #!/usr/bin/env zsh
 
 function project {
-    mkvirtualenv ${1}
-    workon ${1}
+    if [[ $# -le 1 ]]; then
+        py=$(which python2)
+        project=${1}
+    else
+        py=$(which ${1})
+        project=${2}
+    fi
+
+    mkvirtualenv --python ${py} ${project}
+    workon ${project}
     pip install --upgrade pip
     cd "$VIRTUAL_ENV"
-    git clone git@github.com:stylight/${1}.git src/${1}
-    cd src/${1}
+    git clone git@github.com:stylight/"$project".git src/"$project"
+    cd src/"$project"
     pip install -r development.txt
-    echo 'cd "$VIRTUAL_ENV"/src/'"${1}" >> "$VIRTUAL_ENV"/bin/postactivate
+    echo 'cd "$VIRTUAL_ENV"/src/'"${project}" >> "$VIRTUAL_ENV"/bin/postactivate
 }
 
