@@ -60,6 +60,11 @@ for file in $optionals; do
     fi
 done
 
+## NVM (if installed)
+if [ -f /usr/share/nvm/init-nvm.sh ]; then
+    source /usr/share/nvm/init-nvm.sh
+fi
+
 path+=("${HOME}/.cargo/bin")
 path+=("${HOME}/go")
 export PATH
