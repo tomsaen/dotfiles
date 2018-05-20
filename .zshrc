@@ -65,8 +65,9 @@ if [ -f /usr/share/nvm/init-nvm.sh ]; then
     source /usr/share/nvm/init-nvm.sh
 fi
 
-path+=("${HOME}/.cargo/bin")
-path+=("${HOME}/go")
+GOPATH="${HOME}/go"
+path+=(${GOPATH} "${GOPATH}/bin")
+
 export PATH
 
 export EDITOR=vim
