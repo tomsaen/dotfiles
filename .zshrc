@@ -14,7 +14,9 @@ zplug "zsh-users/zsh-syntax-highlighting", from:github, defer:2
 zplug "plugins/git", from:oh-my-zsh
 zplug "plugins/pip", from:oh-my-zsh
 zplug "lib/completion", from:oh-my-zsh
-zplug denysdovhan/spaceship-zsh-theme, use:spaceship.zsh, from:github, as:theme
+zplug mafredri/zsh-async, from:github
+zplug sindresorhus/pure, use:pure.zsh, from:github, as:theme
+# zplug denysdovhan/spaceship-zsh-theme, use:spaceship.zsh, from:github, as:theme
 zplug load
 
 if ! zplug check --verbose; then
