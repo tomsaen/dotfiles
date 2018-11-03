@@ -38,7 +38,10 @@ export LC_ALL=en_US.UTF-8
 export VIRTUALENVWRAPPER_PYTHON=/usr/bin/python2
 export VIRTUALENVWRAPPER_VIRTUALENV=/usr/bin/virtualenv
 export WORKON_HOME=~/.virtualenvs
-source /usr/bin/virtualenvwrapper_lazy.sh
+
+if [ -f /usr/bin/virtualenvwrapper_lazy.sh ]; then
+    source /usr/bin/virtualenvwrapper_lazy.sh
+fi
 
 ## Load functions
 fpath=(${fpath} ${ZSH_BASE}/zfuncs)
