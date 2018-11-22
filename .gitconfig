@@ -1,0 +1,9 @@
+[user]
+    name = Thomas Mueller
+    email = 11089865+tomsaen@users.noreply.github.com
+[push]
+    default = simple
+[alias]
+    lg = log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen%cr%Creset %Cblue[%ar]%Creset %C(bold blue)<%an>%Creset' --color --abbrev-commit
+    please = push --force-with-lease
+    uncommit = reset HEAD~
