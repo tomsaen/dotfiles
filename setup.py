@@ -6,20 +6,23 @@ import shutil as _shutil
 import functools as _ft
 import hashlib as _hashlib
 
-dpath = _ft.partial(_os.path.join, _os.path.dirname(_os.path.abspath(
-    _os.path.normpath(__file__)
-)))
+dpath = _ft.partial(
+    _os.path.join,
+    _os.path.dirname(_os.path.abspath(_os.path.normpath(__file__)))
+)
 
 hpath = _ft.partial(_os.path.join, _os.path.expanduser("~"))
 
 _MAPPINGS = [
     ('alias', '.zsh/alias'),
     ('zfuncs', '.zsh/zfuncs'),
+    ('i3', '.config/i3'),
 ]
 
 _FILES = [
     '.zshrc',
     '.vimrc',
+    '.gitconfig',
 ]
 
 
@@ -69,6 +72,7 @@ def _set_printer(verbose):
     global vprint
     vprint = print if verbose else lambda *args, **kwargs: None
 
+
 def _makedir(newdir):
     """ Create newdir, if necessary """
     _pathlib.Path(newdir).mkdir(parents=True, exist_ok=True)
@@ -102,6 +106,16 @@ def _link(src, target, **kwargs):
         vprint("File {target} already exists.".format(target=target))
 
 
+def _get_pairs():
+    """ Yield tuples of src, target """
+    for file_ in _FILES:
+        yield dpath(file_), hpath(file_)
+
+    for src, target in _MAPPINGS:
+        for file_ in _os.listdir(dpath(src)):
+            yield dpath(src, file_), hpath(target, file_)
+
+
 def _install(func, dry=False):
     """ Install dotfiles """
     vprint("Installing dotfiles now ...")
@@ -109,12 +123,8 @@ def _install(func, dry=False):
     if dry:
         vprint("========== DRY RUN ==========")
 
-    for file_ in _FILES:
-        func(dpath(file_), hpath(file_), dry=dry)
-
-    for src, target in _MAPPINGS:
-        for file_ in _os.listdir(dpath(src)):
-            func(dpath(src, file_), hpath(target, file_), dry=dry)
+    for src, target in _get_pairs():
+        func(dpath(src), hpath(target), dry=dry)
 
 
 def main():
@@ -123,7 +133,7 @@ def main():
         description="tomsaens dotfiles installer"
     )
     parser.add_argument('--link', action='store_true', default=False,
-                        help="If set, the dotfiles will only symlinked to their target. "
+                        help="If set, the dotfiles will only be symlinked to their target. "
                              "Default is False (copy them)")
     parser.add_argument('--silent', action='store_true', default=False)
     parser.add_argument('--dry', action='store_true', default=False)
