@@ -4,7 +4,7 @@ export SAVEHIST=100000
 export HISTFILE="${HOME}/.zsh_history"
 
 ## zplug
-if [[ ! -d ~/.zplug ]];then
+if [[ ! -d ~/.zplug ]]; then
     git clone https://github.com/zplug/zplug ~/.zplug
 fi
 
@@ -26,10 +26,6 @@ if ! zplug check --verbose; then
     fi
 fi
 
-# Spaceship theme relevant things
-SPACESHIP_BATTERY_SHOW=false
-SPACESHIP_DOCKER_SHOW=false
-
 ZSH_BASE="${HOME}/.zsh"
 
 export LANGUAGE=en_US.UTF-8
@@ -37,9 +33,9 @@ export LANG=en_US.UTF-8
 export LC_ALL=en_US.UTF-8
 
 # Virtualenv
-export VIRTUALENVWRAPPER_PYTHON=/usr/bin/python2
-export VIRTUALENVWRAPPER_VIRTUALENV=/usr/bin/virtualenv
-export WORKON_HOME=~/.virtualenvs
+# export VIRTUALENVWRAPPER_PYTHON=/usr/bin/python2
+# export VIRTUALENVWRAPPER_VIRTUALENV=/usr/bin/virtualenv
+# export WORKON_HOME=~/.virtualenvs
 
 if [ -f /usr/bin/virtualenvwrapper_lazy.sh ]; then
     source /usr/bin/virtualenvwrapper_lazy.sh
@@ -56,22 +52,16 @@ for alias in ${ZSH_BASE}/alias/*; do
     source "$alias"
 done
 
-## Source optional file within ZSH_BASE
-optionals=("platform" "private")
-for file in $optionals; do
-    ffile="${ZSH_BASE}/${file}"
-    if [ -f $ffile ]; then
-      source $ffile
-    fi
-done
-
 ## NVM (if installed)
 if [ -f /usr/share/nvm/init-nvm.sh ]; then
     source /usr/share/nvm/init-nvm.sh
 fi
 
 GOPATH="${HOME}/go"
-path+=(${GOPATH} "${GOPATH}/bin")
+CARGOPATH="${HOME}.cargo/bin"
+PIPPATH="${HOME}/.local/bin"
+
+path+=(${GOPATH} "${GOPATH}/bin" ${CARGOPATH} ${PIPPATH})
 
 export PATH
 
@@ -80,3 +70,9 @@ export GPG_TTY=$(tty)
 
 alias zshsource="source ${HOME}/.zshrc"
 alias zshedit="vim ${HOME}/.zshrc"
+
+## Make gnome keyring work
+if [ -n "$DESKTOP_SESSION" ]; then
+    eval $(gnome-keyring-daemon --start)
+    export SSH_AUTH_SOCK
+fi
