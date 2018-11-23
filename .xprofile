@@ -1,0 +1,2 @@
+# Set Keyboard auto repeat and latency
+xset r rate 300 35

@@ -23,6 +23,7 @@ _FILES = [
     '.zshrc',
     '.vimrc',
     '.gitconfig',
+    '.xprofile',
 ]
 
 
