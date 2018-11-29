@@ -17,6 +17,7 @@ _MAPPINGS = [
     ('alias', '.zsh/alias'),
     ('zfuncs', '.zsh/zfuncs'),
     ('i3', '.config/i3'),
+    ('rofi', '.config/rofi'),
 ]
 
 _FILES = [
@@ -113,8 +114,10 @@ def _get_pairs():
         yield dpath(file_), hpath(file_)
 
     for src, target in _MAPPINGS:
-        for file_ in _os.listdir(dpath(src)):
-            yield dpath(src, file_), hpath(target, file_)
+        for path, _, files in _os.walk(src):
+            subpath = path.split('/')[1:]
+            for file_ in files:
+                yield dpath(path, file_), hpath(target, *subpath, file_)
 
 
 def _install(func, dry=False):
