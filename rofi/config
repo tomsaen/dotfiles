@@ -1,0 +1,3 @@
+rofi.combi-modi:    window,drun
+rofi.theme:         /usr/share/rofi/themes/solarized_alternate.rasi
+rofi.modi:          combi,find:~/.config/rofi/scripts/finder.sh
