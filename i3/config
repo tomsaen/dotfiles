@@ -75,10 +75,8 @@ bindsym $mod+Shift+Down move down
 bindsym $mod+Shift+Up move up
 bindsym $mod+Shift+Right move right
 
-# split in horizontal orientation
+# split in orientation
 bindsym $mod+h split h
-
-# split in vertical orientation
 bindsym $mod+v split v
 
 # enter fullscreen mode for the focused container
@@ -101,22 +99,27 @@ bindsym $mod+a focus parent
 # focus the child container
 #bindsym $mod+d focus child
 
-# T470
+# Volume Keys
 bindsym XF86AudioMute           exec --no-startup-id amixer set Master toggle
 bindsym XF86AudioRaiseVolume    exec --no-startup-id amixer set Master 5%+
 bindsym XF86AudioLowerVolume    exec --no-startup-id amixer set Master 5%-
 bindsym XF86AudioMicMute        exec --no-startup-id amixer set Capture toggle
 
-bindsym XF86MonBrightnessUp exec --no-startup-id xbacklight +5
-bindsym XF86MonBrightnessDown exec --no-startup-id xbacklight -5
+# Brightness
+bindsym XF86MonBrightnessUp     exec --no-startup-id xbacklight +5
+bindsym XF86MonBrightnessDown   exec --no-startup-id xbacklight -5
 
 # Move workspaces
-bindsym $mod+Shift+bracketleft move workspace to output left
+bindsym $mod+Shift+bracketleft  move workspace to output left
 bindsym $mod+Shift+bracketright move workspace to output right
 
 # Move containers
-bindsym $mod+Shift+lesser move container to output left
-bindsym $mod+Shift+greater move container to output right
+bindsym $mod+Shift+lesser       move container to output left
+bindsym $mod+Shift+greater      move container to output right
+
+# Navigate workspaces next/previous
+bindsym $mod+Ctrl+Right        workspace next
+bindsym $mod+Ctrl+Left         workspace prev
 
 # Define names for default workspaces for which we configure key bindings later on.
 # We use variables to avoid repeating the names in multiple places.
@@ -180,6 +183,7 @@ mode "$mode_system" {
 }
 
 # resize window (you can also use the mouse for that)
+bindsym $mod+r mode "resize"
 mode "resize" {
         # These bindings trigger as soon as you enter the resize mode
 
@@ -203,8 +207,6 @@ mode "resize" {
         bindsym Escape mode "default"
         bindsym $mod+r mode "default"
 }
-
-bindsym $mod+r mode "resize"
 
 # Start i3bar to display a workspace bar (plus the system information i3status
 # finds out, if available)
