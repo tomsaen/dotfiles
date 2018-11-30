@@ -58,7 +58,7 @@ if [ -f /usr/share/nvm/init-nvm.sh ]; then
 fi
 
 GOPATH="${HOME}/go"
-CARGOPATH="${HOME}.cargo/bin"
+CARGOPATH="${HOME}/.cargo/bin"
 PIPPATH="${HOME}/.local/bin"
 
 path+=(${GOPATH} "${GOPATH}/bin" ${CARGOPATH} ${PIPPATH})
