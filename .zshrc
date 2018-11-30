@@ -70,6 +70,7 @@ export GPG_TTY=$(tty)
 
 alias zshsource="source ${HOME}/.zshrc"
 alias zshedit="vim ${HOME}/.zshrc"
+alias i3edit="vim ${HOME}/.config/i3/config"
 
 ## Make gnome keyring work
 if [ -n "$DESKTOP_SESSION" ]; then
