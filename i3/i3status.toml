@@ -27,9 +27,8 @@ block = "cpu"
 interval = 1
 
 [[block]]
-block = "load"
-interval = 1
-format = "{1m}"
+block = "backlight"
+device = "intel_backlight"
 
 [[block]]
 block = "sound"
@@ -44,4 +43,3 @@ format = "{percentage}% {time} [{power}]"
 block = "time"
 interval = 60
 format = "%a %d/%m %R"
-
