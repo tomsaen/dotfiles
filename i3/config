@@ -338,7 +338,7 @@ exec_always --no-startup-id fix_xcursor
 # }
 
 bar {
-    font pango:DejaVu Sans Mono, FontAwesome 11
+    font pango:DejaVu Sans Mono for Powerline, FontAwesome 11
     position top
     status_command i3status-rs ~/.config/i3/i3status.toml
 
@@ -364,7 +364,7 @@ bindsym $mod+m bar mode toggle
   client.urgent           #CB4B16 #FDF6E3 #1ABC9C #268BD2
   client.placeholder      #000000 #0c0c0c #ffffff #000000 
 
-  client.background       #2B2C2B
+  client.background       #222222
 
 #############################
 ### settings for i3-gaps: ###
