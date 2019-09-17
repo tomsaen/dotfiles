@@ -47,7 +47,7 @@ for_window [window_type="menu"] floating enable
 
 # start a terminal
 # bindsym $mod+Return exec termite
-bindsym $mod+Return exec xst
+bindsym $mod+Return exec st
 
 # kill focused window
 bindsym $mod+Shift+q kill
@@ -112,6 +112,13 @@ bindsym XF86AudioMute           exec --no-startup-id amixer set Master toggle
 bindsym XF86AudioRaiseVolume    exec --no-startup-id amixer set Master 5%+
 bindsym XF86AudioLowerVolume    exec --no-startup-id amixer set Master 5%-
 bindsym XF86AudioMicMute        exec --no-startup-id amixer set Capture toggle
+
+bindsym Ctrl+$mod+Prior         exec --no-startup-id amixer set Master 5%+
+bindsym Ctrl+$mod+Next          exec --no-startup-id amixer set Master 5%-
+bindsym Ctrl+$mod+Home          exec --no-startup-id playerctl play-pause
+bindsym Ctrl+$mod+End           exec --no-startup-id playerctl next
+bindsym Ctrl+$mod+Delete        exec --no-startup-id playerctl previous
+
 
 # Brightness
 bindsym XF86MonBrightnessUp     exec --no-startup-id xbacklight +5
@@ -223,8 +230,10 @@ mode "resize" {
 # finds out, if available)
 bar {
     font pango:Hack, FontAwesome 11
+    # font pango:DejaVu Sans Mono 10
     position top
     status_command i3status-rs ~/.config/i3/i3status.toml
+    # status_command exec ~/.local/bin/mybar
     colors {
         separator #666666
         background #222222
@@ -245,3 +254,4 @@ exec --no-startup-id "compton -cC"
 exec --no-startup-id nm-applet
 exec --no-startup-id "nitrogen --restore"
 exec --no-startup-id "sleep 2s && kalu"
+# exec --no-startup-id xautolock -time 60 -locker i3lock
