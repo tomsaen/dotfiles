@@ -57,11 +57,12 @@ if [ -f /usr/share/nvm/init-nvm.sh ]; then
     source /usr/share/nvm/init-nvm.sh
 fi
 
-GOPATH="${HOME}/go"
+export GOPATH="${HOME}/go"
+export GOBIN="${GOPATH}/bin"
 CARGOPATH="${HOME}/.cargo/bin"
 PIPPATH="${HOME}/.local/bin"
 
-path+=(${GOPATH} "${GOPATH}/bin" ${CARGOPATH} ${PIPPATH} "/home/tom/.gem/ruby/2.6.0/bin" )
+path+=(${GOPATH} ${GOBIN} ${CARGOPATH} ${PIPPATH})
 
 export PATH
 
