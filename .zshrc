@@ -16,7 +16,7 @@ zplug "plugins/pip", from:oh-my-zsh
 zplug "lib/completion", from:oh-my-zsh
 zplug mafredri/zsh-async, from:github
 zplug sindresorhus/pure, use:pure.zsh, from:github, as:theme
-# zplug denysdovhan/spaceship-zsh-theme, use:spaceship.zsh, from:github, as:theme
+# zplug denysdovhan/spaceship-prompt, use:spaceship.zsh, from:github, as:theme
 zplug load
 
 if ! zplug check --verbose; then
@@ -28,9 +28,9 @@ fi
 
 ZSH_BASE="${HOME}/.zsh"
 
-export LANGUAGE=en_US.UTF-8
-export LANG=en_US.UTF-8
-export LC_ALL=en_US.UTF-8
+export LANGUAGE="en_US.UTF-8"
+export LANG="en_US.UTF-8"
+export LC_ALL="en_US.UTF-8"
 
 # Virtualenv
 # export VIRTUALENVWRAPPER_PYTHON=/usr/bin/python2
@@ -61,12 +61,18 @@ GOPATH="${HOME}/go"
 CARGOPATH="${HOME}/.cargo/bin"
 PIPPATH="${HOME}/.local/bin"
 
-path+=(${GOPATH} "${GOPATH}/bin" ${CARGOPATH} ${PIPPATH})
+path+=(${GOPATH} "${GOPATH}/bin" ${CARGOPATH} ${PIPPATH} "/home/tom/.gem/ruby/2.6.0/bin" )
 
 export PATH
 
 export EDITOR=vim
 export GPG_TTY=$(tty)
+
+# Use emacs key-bindings to ensure, reverse-i-search within tmux is working
+bindkey -e
+
+bindkey '^[[1;5D' backward-word
+bindkey '^[[1;5C' forward-word
 
 alias zshsource="source ${HOME}/.zshrc"
 alias zshedit="vim ${HOME}/.zshrc"
@@ -74,6 +80,6 @@ alias i3edit="vim ${HOME}/.config/i3/config"
 
 ## Make gnome keyring work
 if [ -n "$DESKTOP_SESSION" ]; then
-    eval $(gnome-keyring-daemon --start)
+    eval $(gnome-keyring-daemon --start --components=ssh)
     export SSH_AUTH_SOCK
 fi
