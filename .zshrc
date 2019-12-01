@@ -3,34 +3,32 @@ export HISTSIZE=100000
 export SAVEHIST=100000
 export HISTFILE="${HOME}/.zsh_history"
 
-## zplug
-if [[ ! -d ~/.zplug ]]; then
-    git clone https://github.com/zplug/zplug ~/.zplug
-fi
+## zplugin
+source ~/.zplugin/bin/zplugin.zsh
 
-source "${HOME}/.zplug/init.zsh"
+zplugin ice wait blockf atpull'zplugin creinstall -q .'
+zplugin light zsh-users/zsh-completions
 
-zplug "zsh-users/zsh-syntax-highlighting", from:github, defer:2
-zplug "plugins/git", from:oh-my-zsh
-zplug "plugins/pip", from:oh-my-zsh
-zplug "lib/completion", from:oh-my-zsh
-zplug mafredri/zsh-async, from:github
-zplug sindresorhus/pure, use:pure.zsh, from:github, as:theme
-# zplug denysdovhan/spaceship-prompt, use:spaceship.zsh, from:github, as:theme
-zplug load
+zplugin ice wait atload"_zsh_autosuggest_start"
+zplugin light zsh-users/zsh-autosuggestions
 
-if ! zplug check --verbose; then
-    printf "Install zplug plugins? [y/N]: "
-    if read -q; then
-        echo; zplug install
-    fi
-fi
+zplugin snippet OMZ::plugins/git/git.plugin.zsh
+zplugin snippet OMZ::plugins/pip/pip.plugin.zsh
+zplugin snippet OMZ::lib/completion.zsh 
+
+zplugin ice pick"async.zsh" src"pure.zsh"
+zplugin light sindresorhus/pure
+
+autoload -Uz compinit
+compinit
 
 ZSH_BASE="${HOME}/.zsh"
 
 export LANGUAGE="en_US.UTF-8"
 export LANG="en_US.UTF-8"
 export LC_ALL="en_US.UTF-8"
+
+export WINIT_HIDPI_FACTOR=1.0
 
 # Virtualenv
 # export VIRTUALENVWRAPPER_PYTHON=/usr/bin/python2
