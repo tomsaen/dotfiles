@@ -7,3 +7,5 @@
     lg = log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen%cr%Creset %Cblue[%ar]%Creset %C(bold blue)<%an>%Creset' --color --abbrev-commit
     please = push --force-with-lease
     uncommit = reset HEAD~
+[core]
+    pager = diff-so-fancy | less --tabs=4 -RFX
