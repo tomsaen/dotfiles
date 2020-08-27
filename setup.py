@@ -18,7 +18,7 @@ _MAPPINGS = [
     ('zfuncs', '.zsh/zfuncs'),
     ('i3', '.config/i3'),
     ('rofi', '.config/rofi'),
-    ('termite', '.config/termite'),
+    # ('termite', '.config/termite'),
 ]
 
 _FILES = [
@@ -26,6 +26,7 @@ _FILES = [
     '.vimrc',
     '.gitconfig',
     '.xprofile',
+    '.tmux.conf'
 ]
 
 
