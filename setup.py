@@ -122,14 +122,19 @@ def _get_pairs():
                 yield dpath(path, file_), hpath(target, *subpath, file_)
 
 
-def _install(func, dry=False):
+def _install(func, backsync=False, dry=False):
     """ Install dotfiles """
     vprint("Installing dotfiles now ...")
+    if backsync:
+        vprint("Backsync mode")
 
     if dry:
         vprint("========== DRY RUN ==========")
 
     for src, target in _get_pairs():
+        if backsync:
+            src, target = target, src
+
         func(dpath(src), hpath(target), dry=dry)
 
 
@@ -143,15 +148,19 @@ def main():
                              "Default is False (copy them)")
     parser.add_argument('--silent', action='store_true', default=False)
     parser.add_argument('--dry', action='store_true', default=False)
+    parser.add_argument('--backsync', action='store_true', default=False)
 
     args = parser.parse_args()
 
     func = _link if args.link else _copy
 
+    if args.backsync and args.link:
+        raise RuntimeError("Backsync does not work when linking")
+
     verbose = not args.silent
     _set_printer(verbose)
 
-    _install(func, dry=args.dry)
+    _install(func, backsync=args.backsync, dry=args.dry)
 
 
 if __name__ == '__main__':
