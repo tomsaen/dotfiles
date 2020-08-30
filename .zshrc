@@ -6,10 +6,10 @@ export HISTFILE="${HOME}/.zsh_history"
 ## zplugin
 source ~/.zplugin/bin/zplugin.zsh
 
-zplugin ice wait blockf atpull'zplugin creinstall -q .'
+zplugin ice wait lucid blockf atpull'zplugin creinstall -q .'
 zplugin light zsh-users/zsh-completions
 
-zplugin ice wait atload"_zsh_autosuggest_start"
+zplugin ice wait lucid atload"_zsh_autosuggest_start"
 zplugin light zsh-users/zsh-autosuggestions
 
 zplugin snippet OMZ::plugins/git/git.plugin.zsh
@@ -18,6 +18,7 @@ zplugin snippet OMZ::lib/completion.zsh
 
 zplugin ice pick"async.zsh" src"pure.zsh"
 zplugin light sindresorhus/pure
+# zplugin light geometry-zsh/geometry
 
 autoload -Uz compinit
 compinit
