@@ -1,0 +1,7 @@
+configuration {
+	modi: "combi,find:~/.config/rofi/scripts/finder.sh";
+	show-icons: true;
+	sidebar-mode: true;
+	combi-modi: "window,drun";
+	theme: "/home/tom/.local/share/rofi/themes/sidetab-adapta.rasi";
+}
