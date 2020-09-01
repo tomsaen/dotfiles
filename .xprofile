@@ -1,6 +1,0 @@
-# Set Keyboard auto repeat and latency
-xset r rate 300 35
-
-# Set compose key
-setxkbmap -option compose:caps
-
