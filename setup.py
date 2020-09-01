@@ -7,27 +7,22 @@ import functools as _ft
 import hashlib as _hashlib
 
 dpath = _ft.partial(
-    _os.path.join,
-    _os.path.dirname(_os.path.abspath(_os.path.normpath(__file__)))
+    _os.path.join, _os.path.dirname(_os.path.abspath(_os.path.normpath(__file__)))
 )
 
 hpath = _ft.partial(_os.path.join, _os.path.expanduser("~"))
 
 _MAPPINGS = [
-    ('alias', '.zsh/alias'),
-    ('zfuncs', '.zsh/zfuncs'),
-    ('i3', '.config/i3'),
-    ('rofi', '.config/rofi'),
-    # ('termite', '.config/termite'),
+    ("alias", ".zsh/alias"),
+    ("zfuncs", ".zsh/zfuncs"),
+    ("sway", ".config/sway"),
+    ("waybar", ".config/waybar"),
+    ("rofi", ".config/rofi"),
+    ("mako", ".config/mako"),
+    ("alacritty", ".config/alacritty"),
 ]
 
-_FILES = [
-    '.zshrc',
-    '.vimrc',
-    '.gitconfig',
-    '.xprofile',
-    '.tmux.conf'
-]
+_FILES = [".zshrc", ".vimrc", ".gitconfig", ".tmux.conf"]
 
 
 vprint = None
@@ -35,6 +30,7 @@ vprint = None
 
 def _modified_only(func):
     """ Decorator to only process files that have been changed """
+
     def proxy(*args, **kwargs):
         """ Decorated function """
         src, target, *args = args
@@ -49,6 +45,7 @@ def _modified_only(func):
 
 def _assert_existence(func):
     """ Decorator to assert src and target"""
+
     def proxy(*args, **kwargs):
         """ Decorated function """
         src, target, *args = args
@@ -64,8 +61,8 @@ def _assert_existence(func):
 def _hashed(file_):
     """ Hash content of file_ and return the hexdigest """
     hashed = _hashlib.sha256()
-    with open(file_, 'r') as fp:
-        buf = fp.read().encode('utf-8')  # Do not do this for very big files
+    with open(file_, "r") as fp:
+        buf = fp.read().encode("utf-8")  # Do not do this for very big files
         hashed.update(buf)
 
     return hashed.hexdigest()
@@ -87,8 +84,7 @@ def _makedir(newdir):
 def _copy(src, target, **kwargs):
     """ Copy the file """
     vprint("Copying {src} --> {target}".format(src=src, target=target))
-
-    dry = kwargs.pop('dry', False)
+    dry = kwargs.pop("dry", False)
 
     if _os.path.exists(target) and not dry:
         _os.remove(target)
@@ -101,7 +97,7 @@ def _copy(src, target, **kwargs):
 def _link(src, target, **kwargs):
     """ Actually create the symlink """
     vprint("Symlinking {src} --> {target}".format(src=src, target=target))
-    dry = kwargs.pop('dry', False)
+    dry = kwargs.pop("dry", False)
 
     try:
         if not dry:
@@ -117,7 +113,7 @@ def _get_pairs():
 
     for src, target in _MAPPINGS:
         for path, _, files in _os.walk(src):
-            subpath = path.split('/')[1:]
+            subpath = path.split("/")[1:]
             for file_ in files:
                 yield dpath(path, file_), hpath(target, *subpath, file_)
 
@@ -140,15 +136,17 @@ def _install(func, backsync=False, dry=False):
 
 def main():
     """ Main function """
-    parser = _argparse.ArgumentParser(
-        description="tomsaens dotfiles installer"
+    parser = _argparse.ArgumentParser(description="tomsaens dotfiles installer")
+    parser.add_argument(
+        "--link",
+        action="store_true",
+        default=False,
+        help="If set, the dotfiles will only be symlinked to their target. "
+        "Default is False (copy them)",
     )
-    parser.add_argument('--link', action='store_true', default=False,
-                        help="If set, the dotfiles will only be symlinked to their target. "
-                             "Default is False (copy them)")
-    parser.add_argument('--silent', action='store_true', default=False)
-    parser.add_argument('--dry', action='store_true', default=False)
-    parser.add_argument('--backsync', action='store_true', default=False)
+    parser.add_argument("--silent", action="store_true", default=False)
+    parser.add_argument("--dry", action="store_true", default=False)
+    parser.add_argument("--backsync", action="store_true", default=False)
 
     args = parser.parse_args()
 
@@ -163,5 +161,5 @@ def main():
     _install(func, backsync=args.backsync, dry=args.dry)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()
