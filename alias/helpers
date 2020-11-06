@@ -5,6 +5,9 @@ alias pip-remove="pip freeze | grep -v -- -e | while read file; do pip uninstall
 alias wakeup="wakeonlan -i 10.10.1.255 9c:b6:54:09:2e:2b"
 
 alias ls="exa"
+alias ll="exa --all --long"
+alias ls2="exa --tree --level 2"
+alias ls3="exa --tree --level 3"
 
 alias docked="autorandr docked"
 alias undocked="autorandr undocked"
