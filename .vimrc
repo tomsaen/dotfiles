@@ -2,13 +2,16 @@ call plug#begin('~/.vim/plugged')
 
 Plug 'altercation/vim-colors-solarized'
 Plug 'tpope/vim-sensible'
+Plug 'tpope/vim-surround'
 Plug 'bronson/vim-trailing-whitespace'
 Plug 'airblade/vim-gitgutter'
 Plug 'vim-scripts/indentpython.vim'
-Plug 'Valloric/YouCompleteMe'
+"Plug 'Valloric/YouCompleteMe'
+Plug 'neoclide/coc.nvim', {'branch': 'release'}
 Plug 'jmcantrell/vim-virtualenv'
 Plug 'junegunn/fzf', { 'do': { ->fzf#install() } }
 Plug 'junegunn/fzf.vim'
+Plug 'junegunn/vim-peekaboo'
 Plug 'vim-syntastic/syntastic'
 Plug 'nvie/vim-flake8'
 Plug 'psf/black', { 'branch': 'stable' }
@@ -19,13 +22,12 @@ Plug 'vim-airline/vim-airline-themes'
 
 call plug#end()
 
-" Theming
-set background=dark
+set background=light
 try
     colorscheme solarized
 catch
 endtry
-
+"Airline theme
 let g:airline_theme='solarized'
 
 let python_highlight_all=1
@@ -39,11 +41,7 @@ endif
 nnoremap <silent> <C-l> :nohl<CR><C-l>
 
 au BufNewFile, BufRead *.py
-    \ set tabstop=4
-    \ set softtabstop=4
-    \ set shiftwidth=4
     \ set textwidth=88
-    \ set expandtab
     \ set autoindent
     \ set fileformat=unix
     \ match BadWhitespace /\s\+$/
@@ -55,18 +53,29 @@ au BufNewFile, BufRead *.js, *.html, *.css
 
 set encoding=utf-8
 set number
+
 set tabstop=4
+set softtabstop=4
 set shiftwidth=4
 set expandtab
 
 autocmd StdinReadPre * let s:std_in=2
 autocmd VimEnter * if argc() == 1 && isdirectory(argv()[0]) && !exists("s:std_in") | exe 'NERDTree' argv()[0] | wincmd p | ene | exe 'cd '.argv()[0] | endif
 
+" Use persistent history.
+if !isdirectory("/tmp/.vim-undo-dir")
+    call mkdir("/tmp/.vim-undo-dir", "", 0700)
+endif
+set undodir=/tmp/.vim-undo-dir
+set undofile
+
 " Allow saving of files as sudo when I forgot to start vim using sudo.
 cmap w!! w !sudo tee > /dev/null %
+nmap dil ^d$
 
 " FZF
 nnoremap <silent> <leader>f :FZF<cr>
+
 
 " NERDTree
 let NERDTreeIgnore=['\.pyc$', '\~$'] "ignore files in NERDTree
@@ -81,3 +90,8 @@ nnoremap <C-K> <C-W><C-K>
 nnoremap <C-L> <C-W><C-L>
 nnoremap <C-H> <C-W><C-H>
 
+" CoC
+nmap <silent> gd <Plug>(coc-definition)
+nmap <silent> gy <Plug>(coc-type-definition)
+nmap <silent> gi <Plug>(coc-implementation)
+nmap <silent> gr <Plug>(coc-references)
