@@ -16,8 +16,8 @@ zplugin snippet OMZ::plugins/git/git.plugin.zsh
 zplugin snippet OMZ::plugins/pip/pip.plugin.zsh
 zplugin snippet OMZ::lib/completion.zsh
 
-zplugin ice pick"async.zsh" src"pure.zsh"
-zplugin light sindresorhus/pure
+# zplugin ice pick"async.zsh" src"pure.zsh"
+# zplugin light sindresorhus/pure
 
 autoload -Uz compinit
 compinit
@@ -51,7 +51,7 @@ export GOBIN="${GOPATH}/bin"
 CARGOPATH="${HOME}/.cargo/bin"
 PIPPATH="${HOME}/.local/bin"
 
-path+=(${GOPATH} ${GOBIN} ${CARGOPATH} ${PIPPATH})
+path+=(${GOPATH} ${GOBIN} ${CARGOPATH} ${PIPPATH} "$(ruby -e 'puts Gem.user_dir')/bin")
 
 export PATH
 
@@ -80,3 +80,6 @@ fi
 if [[ -z $SSH_AUTH_SOCK ]]; then
     export $(gnome-keyring-daemon --start --components=ssh,secrets,pkcs11)
 fi
+
+## Starship
+eval "$(starship init zsh)"

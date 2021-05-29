@@ -1,0 +1,50 @@
+theme = "solarized-dark"
+icons = "awesome"
+
+[[block]]
+block = "music"
+player = "spotify"
+marquee = true
+
+[[block]]
+block = "bluetooth"
+mac = "2C:41:A1:4D:C5:28" 
+label = " QC 35"
+
+[[block]]
+block = "disk_space"
+path = "/"
+alias = "/"
+info_type = "available"
+unit = "GB"
+interval = 20
+warning = 20.0
+alert = 10.0
+
+# [[block]]
+# block = "memory"
+# display_type = "memory"
+# format_mem = "{Mup}%"
+# format_swap = "{SUp}%"
+
+[[block]]
+block = "cpu"
+interval = 1
+
+[[block]]
+block = "backlight"
+device = "intel_backlight"
+
+[[block]]
+block = "sound"
+
+[[block]]
+block = "battery"
+device = "BAT0"
+interval = 10
+format = "{percentage}% {time} [{power}]"
+
+[[block]]
+block = "time"
+interval = 60
+format = "%a %d/%m %R"
