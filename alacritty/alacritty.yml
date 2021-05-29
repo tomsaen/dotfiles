@@ -250,7 +250,7 @@ schemes:
       white:   '#fdf6e3' # base3
 
 
-colors: *dark
+colors: *light
 # Visual Bell
 #
 # Any time the BEL code is received, Alacritty "rings" the visual bell. Once

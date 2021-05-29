@@ -2,6 +2,7 @@ font=Fira Mono for Powerline
 background-color=#151718
 text-color=#9FCA56
 border-color=#151718
+default-timeout=3000
 
 [urgency=high]
 text-color=#CD3F45

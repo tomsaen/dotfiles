@@ -53,8 +53,8 @@ bindsym $mod+Return exec $term
 
 # Swayidle
 exec swayidle -w \
-        timeout 300 'swaylock -f -c 000000' \
-        timeout 600 'swaymsg "output * dpms off"' resume 'swaymsg "output * dpms on"' \
+        timeout 3600 'swaylock -f -c 000000' \
+        timeout 7200 'swaymsg "output * dpms off"' resume 'swaymsg "output * dpms on"' \
         before-sleep 'swaylock -f -c 000000'
 
 
@@ -256,3 +256,8 @@ input "type:keyboard" {
 # Autostart apps
 exec /usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1
 exec mako
+
+exec systemctl --user import-environment DISPLAY WAYLAND_DISPLAY SWAYSOCK
+exec hash dbus-update-activation-environment 2>/dev/null && \
+     dbus-update-activation-environment --systemd DISPLAY WAYLAND_DISPLAY SWAYSOCK
+

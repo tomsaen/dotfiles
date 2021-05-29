@@ -5,3 +5,4 @@ configuration {
 	combi-modi: "window,drun";
 	theme: "/home/tom/.local/share/rofi/themes/sidetab-adapta.rasi";
 }
+@import "/home/tom/.local/share/rofi/themes/sidetab.rasi"
