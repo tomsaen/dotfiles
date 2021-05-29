@@ -7,6 +7,11 @@ player = "spotify"
 marquee = true
 
 [[block]]
+block = "bluetooth"
+mac = "2C:41:A1:4D:C5:28" 
+label = " QC 35"
+
+[[block]]
 block = "disk_space"
 path = "/"
 alias = "/"

@@ -6,18 +6,18 @@ export HISTFILE="${HOME}/.zsh_history"
 ## zplugin
 source ~/.zplugin/bin/zplugin.zsh
 
-zplugin ice wait blockf atpull'zplugin creinstall -q .'
+zplugin ice wait lucid blockf atpull'zplugin creinstall -q .'
 zplugin light zsh-users/zsh-completions
 
-zplugin ice wait atload"_zsh_autosuggest_start"
+zplugin ice wait lucid atload"_zsh_autosuggest_start"
 zplugin light zsh-users/zsh-autosuggestions
 
 zplugin snippet OMZ::plugins/git/git.plugin.zsh
 zplugin snippet OMZ::plugins/pip/pip.plugin.zsh
 zplugin snippet OMZ::lib/completion.zsh 
 
-zplugin ice pick"async.zsh" src"pure.zsh"
-zplugin light sindresorhus/pure
+# zplugin ice pick"async.zsh" src"pure.zsh"
+# zplugin light sindresorhus/pure
 
 autoload -Uz compinit
 compinit
@@ -60,7 +60,7 @@ export GOBIN="${GOPATH}/bin"
 CARGOPATH="${HOME}/.cargo/bin"
 PIPPATH="${HOME}/.local/bin"
 
-path+=(${GOPATH} ${GOBIN} ${CARGOPATH} ${PIPPATH})
+path+=(${GOPATH} ${GOBIN} ${CARGOPATH} ${PIPPATH} "$(ruby -e 'puts Gem.user_dir')/bin")
 
 export PATH
 
@@ -82,3 +82,6 @@ if [ -n "$DESKTOP_SESSION" ]; then
     eval $(gnome-keyring-daemon --start --components=ssh)
     export SSH_AUTH_SOCK
 fi
+
+## Starship
+eval "$(starship init zsh)"

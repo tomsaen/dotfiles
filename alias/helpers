@@ -11,3 +11,5 @@ alias undocked="autorandr undocked"
 
 alias restore="nitrogen --restore"
 
+alias pbcopy="xsel --clipboard --input"
+alias pbpaste="xsel --clipbard --output"
