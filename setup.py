@@ -1,3 +1,5 @@
+from typing import Callable
+
 import argparse as _argparse
 import os as _os
 import pathlib as _pathlib
@@ -7,88 +9,85 @@ import functools as _ft
 import hashlib as _hashlib
 
 dpath = _ft.partial(
-    _os.path.join,
-    _os.path.dirname(_os.path.abspath(_os.path.normpath(__file__)))
+    _os.path.join, _os.path.dirname(_os.path.abspath(_os.path.normpath(__file__)))
 )
 
 hpath = _ft.partial(_os.path.join, _os.path.expanduser("~"))
 
 _MAPPINGS = [
-    ('alias', '.zsh/alias'),
-    ('zfuncs', '.zsh/zfuncs'),
-    ('i3', '.config/i3'),
-    ('rofi', '.config/rofi'),
-    # ('termite', '.config/termite'),
+    ("alias", ".zsh/alias"),
+    ("zfuncs", ".zsh/zfuncs"),
+    ("i3", ".config/i3"),
+    ("rofi", ".config/rofi"),
+    ("nvim", ".config/nvim"),
 ]
 
-_FILES = [
-    '.zshrc',
-    '.vimrc',
-    '.gitconfig',
-    '.xprofile',
-    '.tmux.conf'
-]
+_FILES = [".zshrc", ".gitconfig", ".xprofile", ".tmux.conf"]
 
 
 vprint = None
 
 
-def _modified_only(func):
-    """ Decorator to only process files that have been changed """
+def _modified_only(func: Callable) -> Callable:
+    """Decorator to only process files that have been changed"""
+
     def proxy(*args, **kwargs):
-        """ Decorated function """
+        """Decorated function"""
         src, target, *args = args
 
         if not _os.path.exists(target) or _hashed(src) != _hashed(target):
             return func(src, target, *args, **kwargs)
         else:
             vprint("{src} -> Hash did not change. Skipping.".format(src=src))
+            return
 
     return proxy
 
 
-def _assert_existence(func):
-    """ Decorator to assert src and target"""
+def _assert_existence(func: Callable) -> Callable:
+    """Decorator to assert src and target"""
+
     def proxy(*args, **kwargs):
-        """ Decorated function """
+        """Decorated function"""
         src, target, *args = args
         if _os.path.exists(src):
             _makedir(_os.path.dirname(target))
             return func(src, target, *args, **kwargs)
         else:
             vprint("{src} does not exist".format(src=src))
+            return
 
     return proxy
 
 
-def _hashed(file_):
-    """ Hash content of file_ and return the hexdigest """
+def _hashed(filepath: str) -> str:
+    """Hash content of file_ and return the hexdigest"""
     hashed = _hashlib.sha256()
-    with open(file_, 'r') as fp:
-        buf = fp.read().encode('utf-8')  # Do not do this for very big files
+    with open(filepath, "r") as fp:
+        buf = fp.read().encode("utf-8")  # Do not do this for very big files
         hashed.update(buf)
 
     return hashed.hexdigest()
 
 
-def _set_printer(verbose):
-    """ Set global vprint """
+def _set_printer(verbose: bool):
+    """Set global vprint"""
     global vprint
     vprint = print if verbose else lambda *args, **kwargs: None
 
 
-def _makedir(newdir):
-    """ Create newdir, if necessary """
+def _makedir(newdir: str):
+    """Create newdir, if necessary"""
     _pathlib.Path(newdir).mkdir(parents=True, exist_ok=True)
 
 
 @_assert_existence
 @_modified_only
-def _copy(src, target, **kwargs):
-    """ Copy the file """
+def _copy(src: str, target: str, **kwargs):
+    """Copy the file"""
     vprint("Copying {src} --> {target}".format(src=src, target=target))
 
-    dry = kwargs.pop('dry', False)
+    dry = kwargs.pop("dry", False)
 
     if _os.path.exists(target) and not dry:
         _os.remove(target)
@@ -98,10 +97,10 @@ def _copy(src, target, **kwargs):
 
 
 @_assert_existence
-def _link(src, target, **kwargs):
-    """ Actually create the symlink """
+def _link(src: str, target: str, **kwargs):
+    """Actually create the symlink"""
     vprint("Symlinking {src} --> {target}".format(src=src, target=target))
-    dry = kwargs.pop('dry', False)
+    dry = kwargs.pop("dry", False)
 
     try:
         if not dry:
@@ -111,19 +110,19 @@ def _link(src, target, **kwargs):
 
 
 def _get_pairs():
-    """ Yield tuples of src, target """
+    """Yield tuples of src, target"""
     for file_ in _FILES:
         yield dpath(file_), hpath(file_)
 
     for src, target in _MAPPINGS:
         for path, _, files in _os.walk(src):
-            subpath = path.split('/')[1:]
+            subpath = path.split("/")[1:]
             for file_ in files:
                 yield dpath(path, file_), hpath(target, *subpath, file_)
 
 
-def _install(func, backsync=False, dry=False):
-    """ Install dotfiles """
+def _install(func: Callable, backsync: bool = False, dry: bool = False):
+    """Install dotfiles"""
     vprint("Installing dotfiles now ...")
     if backsync:
         vprint("Backsync mode")
@@ -139,16 +138,18 @@ def _install(func, backsync=False, dry=False):
 
 
 def main():
-    """ Main function """
-    parser = _argparse.ArgumentParser(
-        description="tomsaens dotfiles installer"
+    """Main function"""
+    parser = _argparse.ArgumentParser(description="tomsaens dotfiles installer")
+    parser.add_argument(
+        "--link",
+        action="store_true",
+        default=False,
+        help="If set, the dotfiles will only be symlinked to their target. "
+        "Default is False (copy them)",
     )
-    parser.add_argument('--link', action='store_true', default=False,
-                        help="If set, the dotfiles will only be symlinked to their target. "
-                             "Default is False (copy them)")
-    parser.add_argument('--silent', action='store_true', default=False)
-    parser.add_argument('--dry', action='store_true', default=False)
-    parser.add_argument('--backsync', action='store_true', default=False)
+    parser.add_argument("--silent", action="store_true", default=False)
+    parser.add_argument("--dry", action="store_true", default=False)
+    parser.add_argument("--backsync", action="store_true", default=False)
 
     args = parser.parse_args()
 
@@ -163,5 +164,5 @@ def main():
     _install(func, backsync=args.backsync, dry=args.dry)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()

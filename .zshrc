@@ -14,7 +14,7 @@ zplugin light zsh-users/zsh-autosuggestions
 
 zplugin snippet OMZ::plugins/git/git.plugin.zsh
 zplugin snippet OMZ::plugins/pip/pip.plugin.zsh
-zplugin snippet OMZ::lib/completion.zsh 
+zplugin snippet OMZ::lib/completion.zsh
 
 # zplugin ice pick"async.zsh" src"pure.zsh"
 # zplugin light sindresorhus/pure
@@ -64,7 +64,7 @@ path+=(${GOPATH} ${GOBIN} ${CARGOPATH} ${PIPPATH} "$(ruby -e 'puts Gem.user_dir'
 
 export PATH
 
-export EDITOR=vim
+export EDITOR=nvim
 export GPG_TTY=$(tty)
 
 # Use emacs key-bindings to ensure, reverse-i-search within tmux is working
@@ -73,9 +73,11 @@ bindkey -e
 bindkey '^[[1;5D' backward-word
 bindkey '^[[1;5C' forward-word
 
+alias vim="nvim"
 alias zshsource="source ${HOME}/.zshrc"
 alias zshedit="vim ${HOME}/.zshrc"
 alias i3edit="vim ${HOME}/.config/i3/config"
+alias vimedit="vim ${HOME}/.config/nvim/init.vim"
 
 ## Make gnome keyring work
 if [ -n "$DESKTOP_SESSION" ]; then
