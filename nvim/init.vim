@@ -5,7 +5,6 @@ Plug 'altercation/vim-colors-solarized'
 Plug 'tpope/vim-sensible'
 Plug 'tpope/vim-surround'
 Plug 'tpope/vim-fugitive'
-Plug 'bronson/vim-trailing-whitespace'
 Plug 'airblade/vim-gitgutter'
 Plug 'vim-scripts/indentpython.vim'
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
@@ -20,6 +19,10 @@ Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
 Plug 'vim-test/vim-test'
 Plug 'liuchengxu/vista.vim'
+Plug 'quramy/tsuquyomi'
+Plug 'Shougo/vimproc.vim', { 'do': 'make' }
+Plug 'leafgarland/typescript-vim'
+call plug#end()
 "Plug 'arcticicestudio/nord-vim'
 call plug#end()
 
@@ -67,6 +70,7 @@ set undofile
 " Allow saving of files as sudo when I forgot to start vim using sudo.
 cmap w!! w !sudo tee > /dev/null %
 nmap dil ^d$
+nnoremap <silent> _ :nohl<CR>
 
 " Vista
 nnoremap <leader>t :Vista<cr>
